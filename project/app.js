@@ -40,12 +40,47 @@ app.get('/bsg-people', async function (req, res) {
             bsg_planets.name AS 'homeworld', bsg_people.age FROM bsg_people \
             LEFT JOIN bsg_planets ON bsg_people.homeworld = bsg_planets.id;`;
         const query2 = 'SELECT * FROM bsg_planets;';
+        const queryPassengers = 'SELECT * FROM Passengers'
+        const queryRoutes = 'SELECT * FROM Routes'
+        const querySchedules = 'SELECT * FROM Schedules'
+        const queryStations = 'SELECT * FROM Stations'
+        const queryTrains = 'SELECT * FROM Trains'
         const [people] = await db.query(query1);
         const [homeworlds] = await db.query(query2);
+        const [passengers] = await db.query(queryPassengers);
+        const [routes] = await db.query(queryRoutes);
+        const [schedules] = await db.query(querySchedules);
+        const [stations] = await db.query(queryStations);
+        const [trains] = await db.query(queryTrains);
 
         // Render the bsg-people.hbs file, and also send the renderer
         //  an object that contains our bsg_people and bsg_homeworld information
         res.render('bsg-people', { people: people, homeworlds: homeworlds });
+    } catch (error) {
+        console.error('Error executing queries:', error);
+        // Send a generic error message to the browser
+        res.status(500).send(
+            'An error occurred while executing the database queries.'
+        );
+    }
+});
+
+app.get('/passengers', async function (req, res) {
+    try {
+        const queryPassengers = 'SELECT * FROM Passengers'
+        const queryRoutes = 'SELECT * FROM Routes'
+        const querySchedules = 'SELECT * FROM Schedules'
+        const queryStations = 'SELECT * FROM Stations'
+        const queryTrains = 'SELECT * FROM Trains'
+        const [passengers] = await db.query(queryPassengers);
+        const [routes] = await db.query(queryRoutes);
+        const [schedules] = await db.query(querySchedules);
+        const [stations] = await db.query(queryStations);
+        const [trains] = await db.query(queryTrains);
+
+        // Render the bsg-people.hbs file, and also send the renderer
+        //  an object that contains our bsg_people and bsg_homeworld information
+        res.render('passengers', { passengers: passengers });
     } catch (error) {
         console.error('Error executing queries:', error);
         // Send a generic error message to the browser

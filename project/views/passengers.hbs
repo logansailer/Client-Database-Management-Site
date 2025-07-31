@@ -1,0 +1,27 @@
+<h1>Passengers</h1>
+
+{{! READ table }}
+<table>
+    <thead>
+        {{! For the table header row, we print the DB attribute names }}
+        <tr>
+            {{#each passengers.[0]}}
+            <th>
+                {{@key}}
+            </th>
+            {{/each}}
+            <th></th>
+        </tr>
+    </thead>
+
+    <tbody>
+        {{! For each row, print the id, fname, lname, homeworld and age }}
+        {{#each passengers}}
+        <tr>
+            <td>{{this.idPassenger}}</td>
+            <td>{{this.firstName}}</td>
+            <td>{{this.lastName}}</td>
+        </tr>
+        {{/each}}
+    </tbody>
+</table>
