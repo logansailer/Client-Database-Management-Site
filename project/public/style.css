@@ -1,4 +1,4 @@
-h1, h2 { margin-left: 16px;}
+h1, h2, h3, p{ margin-left: 16px;}
 table {border-collapse: collapse;margin-left: 32px;}
 th, td {
     border: 1px solid #ddd;
