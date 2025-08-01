@@ -11,6 +11,7 @@
             </th>
             {{/each}}
             <th></th>
+            <th></th>
         </tr>
     </thead>
 
@@ -22,6 +23,26 @@
             <td>{{this.name}}</td>
             <td>{{this.duration}}</td>
             <td>{{this.frequency}}</td>
+
+            {{! DELETE form }}
+            <form id='delete_route_form'>
+                <input type='hidden' name='delete_route_id' value='{{this.idRoute}}' />
+                <td>
+                    <button type='submit'>
+                        Delete
+                    </button>
+                </td>
+            </form>
+
+            {{! EDIT form }}
+            <form id='edit_route_form'>
+                <input type='hidden' name='edit_route_id' value='{{this.idRoute}}' />
+                <td>
+                    <button type='submit'>
+                        Edit
+                    </button>
+                </td>
+            </form>
         </tr>
         {{/each}}
     </tbody>

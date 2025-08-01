@@ -11,6 +11,7 @@
             </th>
             {{/each}}
             <th></th>
+            <th></th>
         </tr>
     </thead>
 
@@ -22,6 +23,26 @@
             <td>{{this.name}}</td>
             <td>{{this.locationDescription}}</td>
             <td>{{this.muggleAccess}}</td>
+
+            {{! DELETE form }}
+            <form id='delete_station_form'>
+                <input type='hidden' name='delete_station_id' value='{{this.idStation}}' />
+                <td>
+                    <button type='submit'>
+                        Delete
+                    </button>
+                </td>
+            </form>
+
+            {{! EDIT form }}
+            <form id='edit_station_form'>
+                <input type='hidden' name='edit_station_id' value='{{this.idStation}}' />
+                <td>
+                    <button type='submit'>
+                        Edit
+                    </button>
+                </td>
+            </form>
         </tr>
         {{/each}}
     </tbody>
