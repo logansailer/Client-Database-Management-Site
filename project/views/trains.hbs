@@ -1,0 +1,28 @@
+<h1>Trains</h1>
+
+{{! READ table }}
+<table>
+    <thead>
+        {{! For the table header row, we print the DB attribute names }}
+        <tr>
+            {{#each trains.[0]}}
+            <th>
+                {{@key}}
+            </th>
+            {{/each}}
+            <th></th>
+        </tr>
+    </thead>
+
+    <tbody>
+        {{! For each row, print the id, fname, lname, house, blood status, and train that each student it on}}
+        {{#each trains}}
+        <tr>
+            <td>{{this.idTrain}}</td>
+            <td>{{this.name}}</td>
+            <td>{{this.maxCapacity}}</td>
+            <td>{{this.idRoute}}</td>
+        </tr>
+        {{/each}}
+    </tbody>
+</table>
