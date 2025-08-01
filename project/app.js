@@ -40,18 +40,9 @@ app.get('/bsg-people', async function (req, res) {
             bsg_planets.name AS 'homeworld', bsg_people.age FROM bsg_people \
             LEFT JOIN bsg_planets ON bsg_people.homeworld = bsg_planets.id;`;
         const query2 = 'SELECT * FROM bsg_planets;';
-        const queryPassengers = 'SELECT * FROM Passengers'
-        const queryRoutes = 'SELECT * FROM Routes'
-        const querySchedules = 'SELECT * FROM Schedules'
-        const queryStations = 'SELECT * FROM Stations'
-        const queryTrains = 'SELECT * FROM Trains'
         const [people] = await db.query(query1);
         const [homeworlds] = await db.query(query2);
-        const [passengers] = await db.query(queryPassengers);
-        const [routes] = await db.query(queryRoutes);
-        const [schedules] = await db.query(querySchedules);
-        const [stations] = await db.query(queryStations);
-        const [trains] = await db.query(queryTrains);
+
 
         // Render the bsg-people.hbs file, and also send the renderer
         //  an object that contains our bsg_people and bsg_homeworld information
@@ -68,19 +59,78 @@ app.get('/bsg-people', async function (req, res) {
 app.get('/passengers', async function (req, res) {
     try {
         const queryPassengers = 'SELECT * FROM Passengers'
-        const queryRoutes = 'SELECT * FROM Routes'
-        const querySchedules = 'SELECT * FROM Schedules'
-        const queryStations = 'SELECT * FROM Stations'
-        const queryTrains = 'SELECT * FROM Trains'
         const [passengers] = await db.query(queryPassengers);
+
+        // Render the passengers.hbs file, and also send the renderer
+        //  an object that contains the passengers entity from the database
+        res.render('passengers', { passengers: passengers });
+    } catch (error) {
+        console.error('Error executing queries:', error);
+        // Send a generic error message to the browser
+        res.status(500).send(
+            'An error occurred while executing the database queries.'
+        );
+    }
+});
+
+app.get('/routes', async function (req, res) {
+    try {
+        const queryRoutes = 'SELECT * FROM Routes'
         const [routes] = await db.query(queryRoutes);
+        // Render the routes.hbs file, and also send the renderer
+        //  an object that contains the routes entity from the database
+        res.render('routes', { routes: routes });
+    } catch (error) {
+        console.error('Error executing queries:', error);
+        // Send a generic error message to the browser
+        res.status(500).send(
+            'An error occurred while executing the database queries.'
+        );
+    }
+});
+
+app.get('/schedules', async function (req, res) {
+    try {
+        const querySchedules = 'SELECT * FROM Schedules'
         const [schedules] = await db.query(querySchedules);
+
+        // Render the schedules.hbs file, and also send the renderer
+        //  an object that contains the schedules entity from the database
+        res.render('schedules', { schedules: schedules });
+    } catch (error) {
+        console.error('Error executing queries:', error);
+        // Send a generic error message to the browser
+        res.status(500).send(
+            'An error occurred while executing the database queries.'
+        );
+    }
+});
+
+app.get('/stations', async function (req, res) {
+    try {
+        const queryStations = 'SELECT * FROM Stations'
         const [stations] = await db.query(queryStations);
+
+        // Render the stations.hbs file, and also send the renderer
+        // an object that contains the stations entity from the database
+        res.render('stations', { stations: stations });
+    } catch (error) {
+        console.error('Error executing queries:', error);
+        // Send a generic error message to the browser
+        res.status(500).send(
+            'An error occurred while executing the database queries.'
+        );
+    }
+});
+
+app.get('/trains', async function (req, res) {
+    try {
+        const queryTrains = 'SELECT * FROM Trains'
         const [trains] = await db.query(queryTrains);
 
-        // Render the bsg-people.hbs file, and also send the renderer
-        //  an object that contains our bsg_people and bsg_homeworld information
-        res.render('passengers', { passengers: passengers });
+        // Render the trains.hbs file, and also send the renderer
+        //  an object that contains the trains entity from the database
+        res.render('trains', { trains: trains });
     } catch (error) {
         console.error('Error executing queries:', error);
         // Send a generic error message to the browser
