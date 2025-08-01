@@ -36,7 +36,7 @@ app.get('/passengers', async function (req, res) {
     try {
         const queryPassengers = `SELECT Passengers.idPassenger, Passengers.firstName, \
             Passengers.lastName, Passengers.house, Passengers.bloodStatus, \
-            Trains.name AS 'ridingTrain' FROM Passengers \
+            Trains.trainName AS 'ridingTrain' FROM Passengers \
             LEFT JOIN Trains ON Passengers.idTrain = Trains.idTrain;`;
         const queryTrains = 'SELECT * FROM Trains'
         const [passengers] = await db.query(queryPassengers);
@@ -72,7 +72,7 @@ app.get('/routes', async function (req, res) {
 
 app.get('/schedules', async function (req, res) {
     try {
-        const querySchedules = `SELECT Routes.name AS 'onRoute', Stations.name as 'atStation', \
+        const querySchedules = `SELECT Routes.routeName AS 'onRoute', Stations.stationName as 'atStation', \
             Schedules.arrivalTime, Schedules.departureTime FROM Schedules \
             LEFT JOIN Routes ON Schedules.idRoute = Routes.idRoute
             LEFT JOIN Stations ON Schedules.idStation = Stations.idStation;`
@@ -113,8 +113,8 @@ app.get('/stations', async function (req, res) {
 
 app.get('/trains', async function (req, res) {
     try {
-        const queryTrains = `SELECT Trains.idTrain, Trains.name, \
-            Trains.maxCapacity, Routes.name AS 'onRoute' FROM Trains \
+        const queryTrains = `SELECT Trains.idTrain, Trains.trainName, \
+            Trains.maxCapacity, Routes.routeName AS 'onRoute' FROM Trains \
             LEFT JOIN Routes ON Trains.idRoute = Routes.idRoute;`
         const queryRoutes = 'SELECT * FROM Routes'
         const [trains] = await db.query(queryTrains);
