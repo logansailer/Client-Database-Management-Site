@@ -58,12 +58,17 @@ app.get('/bsg-people', async function (req, res) {
 
 app.get('/passengers', async function (req, res) {
     try {
-        const queryPassengers = 'SELECT * FROM Passengers'
+        const queryPassengers = `SELECT Passengers.idPassenger, Passengers.firstName, \
+            Passengers.lastName, Passengers.house, Passengers.bloodStatus, \
+            Trains.name AS 'ridingTrain' FROM Passengers \
+            LEFT JOIN Trains ON Passengers.idTrain = Trains.idTrain;`;
+        const queryTrains = 'SELECT * FROM Trains'
         const [passengers] = await db.query(queryPassengers);
+        const [trains] = await db.query(queryTrains);
 
         // Render the passengers.hbs file, and also send the renderer
         //  an object that contains the passengers entity from the database
-        res.render('passengers', { passengers: passengers });
+        res.render('passengers', { passengers: passengers, trains: trains });
     } catch (error) {
         console.error('Error executing queries:', error);
         // Send a generic error message to the browser

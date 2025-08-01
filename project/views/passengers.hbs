@@ -15,12 +15,15 @@
     </thead>
 
     <tbody>
-        {{! For each row, print the id, fname, lname, homeworld and age }}
+        {{! For each row, print the id, fname, lname, house, blood status, and train that each student it on}}
         {{#each passengers}}
         <tr>
             <td>{{this.idPassenger}}</td>
             <td>{{this.firstName}}</td>
             <td>{{this.lastName}}</td>
+            <td>{{this.house}}</td>
+            <td>{{this.bloodStatus}}</td>
+            <td>{{this.ridingTrain}}</td>
         </tr>
         {{/each}}
     </tbody>
