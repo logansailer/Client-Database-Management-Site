@@ -1,3 +1,10 @@
+// Citation for use of AI Tools:
+// Date: 8/8/2025
+// Adapted from code generated with the prompt:
+// Can you help to write a app.post '/delete-passenger' route that
+// passes a passenger id to my delete_passenger procedure [PL.SQL]
+// AI Source URL: https://copilot.microsoft.com/
+
 // ########################################
 // ########## SETUP
 
@@ -21,7 +28,7 @@ app.set('view engine', '.hbs'); // Use handlebars engine for *.hbs files.
 // ########################################
 // ########## ROUTE HANDLERS
 
-// READ ROUTES
+// get home page
 app.get('/', async function (req, res) {
     try {
         res.render('home'); // Render the home.hbs file
@@ -32,6 +39,7 @@ app.get('/', async function (req, res) {
     }
 });
 
+//get passengers
 app.get('/passengers', async function (req, res) {
     try {
         const queryPassengers = `SELECT Passengers.idPassenger, Passengers.firstName, \
@@ -54,6 +62,7 @@ app.get('/passengers', async function (req, res) {
     }
 });
 
+//get routes
 app.get('/routes', async function (req, res) {
     try {
         const queryRoutes = 'SELECT * FROM Routes'
@@ -70,6 +79,7 @@ app.get('/routes', async function (req, res) {
     }
 });
 
+// get schedules
 app.get('/schedules', async function (req, res) {
     try {
         const querySchedules = `SELECT Routes.routeName AS 'onRoute', Stations.stationName as 'atStation', \
@@ -94,6 +104,7 @@ app.get('/schedules', async function (req, res) {
     }
 });
 
+// get stations
 app.get('/stations', async function (req, res) {
     try {
         const queryStations = 'SELECT * FROM Stations'
@@ -111,6 +122,7 @@ app.get('/stations', async function (req, res) {
     }
 });
 
+// get trains
 app.get('/trains', async function (req, res) {
     try {
         const queryTrains = `SELECT Trains.idTrain, Trains.trainName, \
@@ -130,6 +142,47 @@ app.get('/trains', async function (req, res) {
             'An error occurred while executing the database queries.'
         );
     }
+});
+
+// reset data
+app.post('/reset', async function (req, res) {
+    try {
+        // calls the procedure to reset the database
+        const resetQuery = `CALL reset_data();`;
+        await db.query(resetQuery);
+        res.status(200).json({ success: true, message: 'Database reset successfully' });
+    } catch (error) {
+        console.error('Error executing queries:', error);
+        // Send a generic error message to the browser
+        res.status(500).send(
+            'An error occurred while executing the database queries.'
+        );
+    }
+});
+
+// delete a specific passenger
+app.post('/delete-passenger', async function (req, res) {
+  const { idPassenger } = req.body;
+
+  if (!idPassenger) {
+    return res.status(400).json({ success: false, message: 'Passenger ID required.' });
+  }
+
+  try {
+    const deleteQuery = `CALL delete_passenger(?);`;
+    const [rows] = await db.query(deleteQuery, [idPassenger]);
+    
+    // rows[0][0].message contains the message
+    const message = rows?.[0]?.[0]?.message || 'No response from procedure.';
+    if (message.includes('successfully')) {
+      res.status(200).json({ success: true, message });
+    } else {
+      res.status(500).json({ success: false, message });
+    }
+  } catch (error) {
+    console.error('Error deleting passenger:', error);
+    res.status(500).send('An error occurred while executing the database queries.');
+  }
 });
 
 // ########################################

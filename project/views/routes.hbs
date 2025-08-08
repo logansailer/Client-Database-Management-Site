@@ -25,7 +25,7 @@
             <td>{{this.frequency}}</td>
 
             {{! DELETE form }}
-            <form id='delete_route_form'>
+            <form class='delete_route_form'>
                 <input type='hidden' name='delete_route_id' value='{{this.idRoute}}' />
                 <td>
                     <button type='submit'>
@@ -35,7 +35,7 @@
             </form>
 
             {{! EDIT form }}
-            <form id='edit_route_form'>
+            <form class='edit_route_form'>
                 <input type='hidden' name='edit_route_id' value='{{this.idRoute}}' />
                 <td>
                     <button type='submit'>
@@ -45,7 +45,7 @@
             </form>
         </tr>
         {{/each}}
-        <form id='insert_route_form'>
+        <form class='insert_route_form'>
             <input type='hidden' name='insert_route_id' />
             <td>
                 <button type='submit'>

@@ -25,7 +25,7 @@
             <td>{{this.departureTime}}</td>
 
             {{! DELETE form }}
-            <form id='delete_schedule_form'>
+            <form class='delete_schedule_form'>
                 <input type='hidden' name='delete_schedule_id' value='{{this.idSchedule}}' />
                 <td>
                     <button type='submit'>
@@ -35,7 +35,7 @@
             </form>
 
             {{! EDIT form }}
-            <form id='edit_schedule_form'>
+            <form class='edit_schedule_form'>
                 <input type='hidden' name='edit_schedule_id' value='{{this.idRoute}} + {{this.idStation}}' />
                 <td>
                     <button type='submit'>
@@ -45,7 +45,7 @@
             </form>
         </tr>
         {{/each}}
-        <form id='insert_schedule_form'>
+        <form class='insert_schedule_form'>
             <input type='hidden' name='insert_schedule_id' />
             <td>
                 <button type='submit'>

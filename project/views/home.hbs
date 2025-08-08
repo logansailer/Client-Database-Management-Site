@@ -1,7 +1,40 @@
+{{!
+Citation for use of AI Tools:
+Date: 8/8/2025
+Adapted from code generated with the prompt:
+Write a javascript button that I can click on a page to call my post /reset [app.js]
+AI Source URL: https://copilot.microsoft.com/
+!}}
+
 <h1>Home page</h1>
 <div class="homepageDescription">
     <h2>Group 33</h2>
     <h3>Logan Sailer and Lauren Gilane</h3>
     <p>After Lord Voldemort was defeated, the number of witches and wizards attending Hogwarts has reached a new high. This has resulted in an unexpected uptick in the amount of ridership on the Hogwarts Express and other such lines throughout the Wizarding World. As such, the Ministry of Magic has decided to create a new database to better catalog trains and ridership.</p>
     <p>Everyday, 20 trains transport upwards of 1000 passengers between 10 stations, catering to Hogwarts students and other commuters in the Wizarding World 2. Each passenger that registers at the station is registered as a transaction to keep track of ridership. The database aims to keep track of trains, train passengers, stations, and the routes available. A database driven website will allow for Hogwarts Express admin to swiftly view train connections, route availability, and passenger demographics to better serve commuters. </p>
+    <button id="resetButton">Reset Database?</button>
+    <p id="resetResponse"></p>
 </div>
+
+<script>
+    document.querySelector('#resetButton').addEventListener('click', async () => {
+      const message = document.querySelector('#resetResponse');
+      message.textContent = 'Sending request...';
+      try {
+        const response = await fetch('/reset', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        });
+        const result = await response.json();
+        if (result.success) {
+          message.textContent = `✅ Success: ${result.message}`;
+        } else {
+          message.textContent = `❌ Error: ${result.message}`;
+        }
+      } catch (error) {
+        message.textContent = `❌ Request failed: ${error.message}`;
+      }
+    });
+</script>
