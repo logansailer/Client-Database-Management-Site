@@ -158,14 +158,11 @@ app.post('/delete-passenger', async function (req, res) {
 
   try {
     await db.query(`CALL delete_passenger(?)`, [idPassenger]);
-
-    res.status(200).json({
-      success: true,
-      message: 'Passenger deleted successfully.',
+    res.status(200).json({success: true,message: 'Passenger deleted successfully.',
     });
   } catch (error) {
     console.error('Error deleting passenger:', error);
-
+    // Send a generic error message to the browser
     res.status(500).json({
       success: false,
       message: 'An error occurred while deleting the passenger.',
