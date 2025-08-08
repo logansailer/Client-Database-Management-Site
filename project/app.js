@@ -42,11 +42,8 @@ app.get('/', async function (req, res) {
 //get passengers
 app.get('/passengers', async function (req, res) {
     try {
-        const queryPassengers = `SELECT Passengers.idPassenger, Passengers.firstName, \
-            Passengers.lastName, Passengers.house, Passengers.bloodStatus, \
-            Trains.trainName AS 'ridingTrain' FROM Passengers \
-            LEFT JOIN Trains ON Passengers.idTrain = Trains.idTrain;`;
-        const queryTrains = 'SELECT * FROM Trains'
+        const queryPassengers = `SELECT * FROM passenger_view;`;
+        const queryTrains = 'SELECT * FROM train_view;'
         const [passengers] = await db.query(queryPassengers);
         const [trains] = await db.query(queryTrains);
 
@@ -65,7 +62,7 @@ app.get('/passengers', async function (req, res) {
 //get routes
 app.get('/routes', async function (req, res) {
     try {
-        const queryRoutes = 'SELECT * FROM Routes'
+        const queryRoutes = 'SELECT * FROM route_view;'
         const [routes] = await db.query(queryRoutes);
         // Render the routes.hbs file, and also send the renderer
         //  an object that contains the routes entity from the database
@@ -82,12 +79,9 @@ app.get('/routes', async function (req, res) {
 // get schedules
 app.get('/schedules', async function (req, res) {
     try {
-        const querySchedules = `SELECT Routes.routeName AS 'onRoute', Stations.stationName as 'atStation', \
-            Schedules.arrivalTime, Schedules.departureTime FROM Schedules \
-            LEFT JOIN Routes ON Schedules.idRoute = Routes.idRoute
-            LEFT JOIN Stations ON Schedules.idStation = Stations.idStation;`
-        const queryRoutes = 'SELECT * FROM Routes'
-        const queryStations = 'SELECT * FROM Stations'
+        const querySchedules = `SELECT * FROM schedule_view;`
+        const queryRoutes = 'SELECT * FROM route_view;'
+        const queryStations = 'SELECT * FROM station_view;'
         const [schedules] = await db.query(querySchedules);
         const [routes] = await db.query(queryRoutes);
         const [stations] = await db.query(queryStations);
@@ -107,7 +101,7 @@ app.get('/schedules', async function (req, res) {
 // get stations
 app.get('/stations', async function (req, res) {
     try {
-        const queryStations = 'SELECT * FROM Stations'
+        const queryStations = 'SELECT * FROM station_view;'
         const [stations] = await db.query(queryStations);
 
         // Render the stations.hbs file, and also send the renderer
@@ -125,10 +119,8 @@ app.get('/stations', async function (req, res) {
 // get trains
 app.get('/trains', async function (req, res) {
     try {
-        const queryTrains = `SELECT Trains.idTrain, Trains.trainName, \
-            Trains.maxCapacity, Routes.routeName AS 'onRoute' FROM Trains \
-            LEFT JOIN Routes ON Trains.idRoute = Routes.idRoute;`
-        const queryRoutes = 'SELECT * FROM Routes'
+        const queryTrains = `SELECT * FROM train_view;`
+        const queryRoutes = 'SELECT * FROM route_view'
         const [trains] = await db.query(queryTrains);
         const [routes] = await db.query(queryRoutes);
 
@@ -164,24 +156,20 @@ app.post('/reset', async function (req, res) {
 app.post('/delete-passenger', async function (req, res) {
   const { idPassenger } = req.body;
 
-  if (!idPassenger) {
-    return res.status(400).json({ success: false, message: 'Passenger ID required.' });
-  }
-
   try {
-    const deleteQuery = `CALL delete_passenger(?);`;
-    const [rows] = await db.query(deleteQuery, [idPassenger]);
-    
-    // rows[0][0].message contains the message
-    const message = rows?.[0]?.[0]?.message || 'No response from procedure.';
-    if (message.includes('successfully')) {
-      res.status(200).json({ success: true, message });
-    } else {
-      res.status(500).json({ success: false, message });
-    }
+    await db.query(`CALL delete_passenger(?)`, [idPassenger]);
+
+    res.status(200).json({
+      success: true,
+      message: 'Passenger deleted successfully.',
+    });
   } catch (error) {
     console.error('Error deleting passenger:', error);
-    res.status(500).send('An error occurred while executing the database queries.');
+
+    res.status(500).json({
+      success: false,
+      message: 'An error occurred while deleting the passenger.',
+    });
   }
 });
 
