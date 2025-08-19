@@ -10,7 +10,7 @@ A full-stack web application for managing client information, built with **MySQL
 - **Dynamic UI**: Server-side templating with Handlebars for interactive content rendering  
 - **Responsive Design**: Accessible across desktop and mobile devices  
 
-## 🛠 Tech Stack  
+## Tech Stack  
 - **Frontend:** HTML, CSS, JavaScript, Handlebars  
 - **Backend:** Node.js, Express.js  
 - **Database:** MySQL  
