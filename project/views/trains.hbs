@@ -10,8 +10,6 @@
                 {{@key}}
             </th>
             {{/each}}
-            <th></th>
-            <th></th>
         </tr>
     </thead>
 
@@ -23,35 +21,7 @@
             <td>{{this.trainName}}</td>
             <td>{{this.maxCapacity}}</td>
             <td>{{this.onRoute}}</td>
-
-            {{! DELETE form }}
-            <form id='delete_train_form'>
-                <input type='hidden' name='delete_train_id' value='{{this.idTrain}}' />
-                <td>
-                    <button type='submit'>
-                        Delete
-                    </button>
-                </td>
-            </form>
-
-            {{! EDIT form }}
-            <form id='edit_train_form'>
-                <input type='hidden' name='edit_train_id' value='{{this.idTrain}}' />
-                <td>
-                    <button type='submit'>
-                        Edit
-                    </button>
-                </td>
-            </form>
         </tr>
         {{/each}}
-        <form id='insert_train_form'>
-            <input type='hidden' name='insert_train_id' />
-            <td>
-                <button type='submit'>
-                    New Train
-                </button>
-            </td>
-        </form>
     </tbody>
 </table>

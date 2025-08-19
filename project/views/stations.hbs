@@ -1,57 +1,74 @@
+{{!-- Citation for use of AI Tools: --}}
+{{!-- Date: 8/15/2025 --}}
+{{!-- Adapted from code generated with the prompt: --}}
+{{!-- Can you help me add an "Add Station" form to my stations.hbs and a corresponding app.post route in app.js [Express.js, Handlebars] --}}
+{{!-- AI Source URL: https://copilot.microsoft.com/ --}}
+
 <h1>Stations</h1>
 
 {{! READ table }}
 <table>
     <thead>
-        {{! For the table header row, we print the DB attribute names }}
         <tr>
             {{#each stations.[0]}}
-            <th>
-                {{@key}}
-            </th>
+            <th>{{@key}}</th>
             {{/each}}
-            <th></th>
-            <th></th>
         </tr>
     </thead>
 
     <tbody>
-        {{! For each row, print the id, fname, lname, house, blood status, and train that each student it on}}
         {{#each stations}}
         <tr>
             <td>{{this.idStation}}</td>
             <td>{{this.stationName}}</td>
             <td>{{this.locationDescription}}</td>
             <td>{{this.muggleAccess}}</td>
-
-            {{! DELETE form }}
-            <form class='delete_station_form'>
-                <input type='hidden' name='delete_station_id' value='{{this.idStation}}' />
-                <td>
-                    <button type='submit'>
-                        Delete
-                    </button>
-                </td>
-            </form>
-
-            {{! EDIT form }}
-            <form class='edit_station_form'>
-                <input type='hidden' name='edit_station_id' value='{{this.idStation}}' />
-                <td>
-                    <button type='submit'>
-                        Edit
-                    </button>
-                </td>
-            </form>
         </tr>
         {{/each}}
-        <form class='insert_station_form'>
-            <input type='hidden' name='insert_station_id' />
-            <td>
-                <button type='submit'>
-                    New Station
-                </button>
-            </td>
-        </form>
     </tbody>
 </table>
+
+<h2>Add New Station</h2>
+<form id="add_station_form">
+    <label>
+        Station Name:
+        <input type="text" name="stationName" required>
+    </label>
+    <label>
+        Location Description:
+        <input type="text" name="locationDescription">
+    </label>
+    <label>
+        Muggle Access:
+        <select name="muggleAccess" required>
+            <option value="Yes">Yes</option>
+            <option value="No">No</option>
+        </select>
+    </label>
+    <button type="submit">Add Station</button>
+</form>
+
+<script>
+const addStationForm = document.getElementById('add_station_form');
+addStationForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const data = Object.fromEntries(new FormData(addStationForm).entries());
+
+    try {
+        const res = await fetch('/stations/add', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data)
+        });
+
+        if (res.ok) {
+            window.location.reload(); // reload to show updated table
+        } else {
+            alert('Error adding station.');
+        }
+    } catch (err) {
+        console.error(err);
+        alert('Error adding station.');
+    }
+});
+</script>

@@ -1,57 +1,237 @@
+{{!-- Citation for use of AI Tools: --}}
+{{!-- Date: 8/15/2025 --}}
+{{!-- Adapted from code generated with the prompt: --}}
+{{!-- Can you rewrite schedules.hbs so that the edit form toggles properly when clicking the Edit button --}}
+{{!-- AI Source URL: https://copilot.microsoft.com/ --}}
+
+{{!-- Citation for use of AI Tools: --}}
+{{!-- Date: 8/15/2025 --}}
+{{!-- Adapted from code generated with the prompt: --}}
+{{!-- Can you rewrite schedules.hbs so that route and station are editable via select inputs without using Handlebars helpers --}}
+{{!-- Can you do it again without using Handlebars helpers --}}
+{{!-- AI Source URL: https://copilot.microsoft.com/ --}}
+
+{{!-- Citation for use of AI Tools: --}}
+{{!-- Date: 8/15/2025 --}}
+{{!-- Adapted from code generated with the prompt: --}}
+{{!-- Can you fix the JavaScript in schedules.hbs so that edit forms submit via fetch and reload the page on success --}}
+{{!-- AI Source URL: https://copilot.microsoft.com/ --}}
+
 <h1>Schedules</h1>
 
-{{! READ table }}
 <table>
-    <thead>
-        {{! For the table header row, we print the DB attribute names }}
-        <tr>
-            {{#each schedules.[0]}}
-            <th>
-                {{@key}}
-            </th>
+  <thead>
+    <tr>
+      <th>Route</th>
+      <th>Station</th>
+      <th>Arrival Time</th>
+      <th>Departure Time</th>
+      <th>Delete</th>
+      <th>Edit</th>
+    </tr>
+  </thead>
+  <tbody>
+    {{#each schedules}}
+    <tr>
+      <td>{{this.onRoute}}</td>
+      <td>{{this.atStation}}</td>
+      <td>{{this.arrivalTime}}</td>
+      <td>{{this.departureTime}}</td>
+
+      <!-- DELETE button -->
+      <td>
+        <button 
+          class="delete-schedule-btn"
+          data-idroute="{{this.idRoute}}"
+          data-idstation="{{this.idStation}}">
+          Delete
+        </button>
+      </td>
+
+      <!-- EDIT button toggles edit form -->
+      <td>
+        <button 
+          class="edit-schedule-toggle-btn"
+          data-idroute="{{this.idRoute}}"
+          data-idstation="{{this.idStation}}">
+          Edit
+        </button>
+      </td>
+    </tr>
+
+    <!-- EDIT inline form (hidden by default) -->
+    <tr class="edit-schedule-row" id="edit-row-{{this.idRoute}}-{{this.idStation}}" style="display:none;">
+      <form class="edit-schedule-form">
+        <input type="hidden" name="originalIdRoute" value="{{this.idRoute}}">
+        <input type="hidden" name="originalIdStation" value="{{this.idStation}}">
+
+        <td>
+          <select name="idRoute" required>
+            {{#each ../routes}}
+              <option value="{{this.idRoute}}">{{this.routeName}}</option>
             {{/each}}
-            <th></th>
-            <th></th>
-        </tr>
-    </thead>
+          </select>
+        </td>
 
-    <tbody>
-        {{! For each row, print the id, fname, lname, house, blood status, and train that each student it on}}
-        {{#each schedules}}
-        <tr>
-            <td>{{this.onRoute}}</td>
-            <td>{{this.atStation}}</td>
-            <td>{{this.arrivalTime}}</td>
-            <td>{{this.departureTime}}</td>
+        <td>
+          <select name="idStation" required>
+            {{#each ../stations}}
+              <option value="{{this.idStation}}">{{this.stationName}}</option>
+            {{/each}}
+          </select>
+        </td>
 
-            {{! DELETE form }}
-            <form class='delete_schedule_form'>
-                <input type='hidden' name='delete_schedule_id' value='{{this.idSchedule}}' />
-                <td>
-                    <button type='submit'>
-                        Delete
-                    </button>
-                </td>
-            </form>
+        <td>
+          <input type="datetime-local" name="arrivalTime" class="arrivalTime" data-value="{{this.arrivalTime}}" required>
+        </td>
+        <td>
+          <input type="datetime-local" name="departureTime" class="departureTime" data-value="{{this.departureTime}}" required>
+        </td>
+        
+        <td colspan="2"><button type="submit">Save</button></td>
+      </form>
+    </tr>
+    {{/each}}
 
-            {{! EDIT form }}
-            <form class='edit_schedule_form'>
-                <input type='hidden' name='edit_schedule_id' value='{{this.idRoute}} + {{this.idStation}}' />
-                <td>
-                    <button type='submit'>
-                        Edit
-                    </button>
-                </td>
-            </form>
-        </tr>
-        {{/each}}
-        <form class='insert_schedule_form'>
-            <input type='hidden' name='insert_schedule_id' />
-            <td>
-                <button type='submit'>
-                    New Schedule
-                </button>
-            </td>
-        </form>
-    </tbody>
+    <!-- CREATE new schedule row -->
+    <tr>
+      <form id="create_schedule_form">
+        <td>
+          <select name="create_schedule_idRoute" required>
+            <option value="">Select Route</option>
+            {{#each routes}}
+            <option value="{{this.idRoute}}">{{this.routeName}}</option>
+            {{/each}}
+          </select>
+        </td>
+        <td>
+          <select name="create_schedule_idStation" required>
+            <option value="">Select Station</option>
+            {{#each stations}}
+            <option value="{{this.idStation}}">{{this.stationName}}</option>
+            {{/each}}
+          </select>
+        </td>
+        <td><input type="datetime-local" name="create_schedule_arrivalTime" required></td>
+        <td><input type="datetime-local" name="create_schedule_departureTime" required></td>
+        <td colspan="2"><button type="submit">Add Schedule</button></td>
+      </form>
+    </tr>
+  </tbody>
 </table>
+
+<script>
+// Format JS Date to 'YYYY-MM-DDTHH:MM' for datetime-local
+function formatForDatetimeLocal(dateStr) {
+  if (!dateStr) return '';
+  const dt = new Date(dateStr);
+  const yyyy = dt.getFullYear();
+  const mm = String(dt.getMonth() + 1).padStart(2, '0');
+  const dd = String(dt.getDate()).padStart(2, '0');
+  const hh = String(dt.getHours()).padStart(2, '0');
+  const min = String(dt.getMinutes()).padStart(2, '0');
+  return `${yyyy}-${mm}-${dd}T${hh}:${min}`;
+}
+
+// Toggle edit row visibility
+document.querySelectorAll('.edit-schedule-toggle-btn').forEach(button => {
+  button.addEventListener('click', () => {
+    const idRoute = button.dataset.idroute;
+    const idStation = button.dataset.idstation;
+    const row = document.getElementById(`edit-row-${idRoute}-${idStation}`);
+    row.style.display = row.style.display === 'none' ? '' : 'none';
+  });
+});
+
+// Preselect route, station, and format datetime inputs
+document.querySelectorAll('.edit-schedule-row').forEach(row => {
+  const form = row.querySelector('form');
+  if (!form) return;
+
+  const originalRoute = form.originalIdRoute.value;
+  const originalStation = form.originalIdStation.value;
+
+  const routeSelect = form.querySelector('select[name="idRoute"]');
+  if (routeSelect) {
+    Array.from(routeSelect.options).forEach(opt => {
+      if (opt.value === originalRoute) opt.selected = true;
+    });
+  }
+
+  const stationSelect = form.querySelector('select[name="idStation"]');
+  if (stationSelect) {
+    Array.from(stationSelect.options).forEach(opt => {
+      if (opt.value === originalStation) opt.selected = true;
+    });
+  }
+
+  const arrivalInput = form.querySelector('.arrivalTime');
+  const departureInput = form.querySelector('.departureTime');
+  if (arrivalInput) arrivalInput.value = formatForDatetimeLocal(arrivalInput.dataset.value);
+  if (departureInput) departureInput.value = formatForDatetimeLocal(departureInput.dataset.value);
+});
+
+// Submit EDIT forms via fetch
+document.querySelectorAll('.edit-schedule-form').forEach(form => {
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const data = Object.fromEntries(new FormData(form).entries());
+
+    try {
+      const res = await fetch('/schedules/edit', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+      });
+      if (res.ok) window.location.reload();
+      else alert('Error updating schedule.');
+    } catch (err) {
+      console.error(err);
+      alert('Error updating schedule.');
+    }
+  });
+});
+
+// Submit CREATE form via fetch
+const createForm = document.getElementById('create_schedule_form');
+if (createForm) {
+  createForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const data = Object.fromEntries(new FormData(createForm).entries());
+
+    try {
+      const res = await fetch('/schedules/create', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+      });
+      if (res.ok) window.location.reload();
+      else alert('Error creating schedule.');
+    } catch (err) {
+      console.error(err);
+      alert('Error creating schedule.');
+    }
+  });
+}
+
+// Delete schedules via fetch
+document.querySelectorAll('.delete-schedule-btn').forEach(button => {
+  button.addEventListener('click', async () => {
+    const idRoute = button.dataset.idroute;
+    const idStation = button.dataset.idstation;
+
+    try {
+      const res = await fetch('/schedules/delete', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ idRoute, idStation })
+      });
+      if (res.ok) window.location.reload();
+      else alert('Failed to delete schedule');
+    } catch (err) {
+      console.error(err);
+      alert('Error deleting schedule');
+    }
+  });
+});
+</script>

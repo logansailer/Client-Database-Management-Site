@@ -10,8 +10,6 @@
                 {{@key}}
             </th>
             {{/each}}
-            <th></th>
-            <th></th>
         </tr>
     </thead>
 
@@ -23,35 +21,7 @@
             <td>{{this.routeName}}</td>
             <td>{{this.duration}}</td>
             <td>{{this.frequency}}</td>
-
-            {{! DELETE form }}
-            <form class='delete_route_form'>
-                <input type='hidden' name='delete_route_id' value='{{this.idRoute}}' />
-                <td>
-                    <button type='submit'>
-                        Delete
-                    </button>
-                </td>
-            </form>
-
-            {{! EDIT form }}
-            <form class='edit_route_form'>
-                <input type='hidden' name='edit_route_id' value='{{this.idRoute}}' />
-                <td>
-                    <button type='submit'>
-                        Edit
-                    </button>
-                </td>
-            </form>
         </tr>
         {{/each}}
-        <form class='insert_route_form'>
-            <input type='hidden' name='insert_route_id' />
-            <td>
-                <button type='submit'>
-                    New Route
-                </button>
-            </td>
-        </form>
     </tbody>
 </table>
