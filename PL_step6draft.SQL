@@ -1,9 +1,3 @@
--- Citation for use of AI Tools:
--- Date: 8/15/2025
--- Adapted from code generated with the prompt:
--- Can you help me edit the UPDATE schedule procedure to work with the app.post('/schedules/edit') route I implemented [SQL]
--- AI Source URL: https://copilot.microsoft.com/
-
 -------------------------------------
 -- PL/SQL operations for whole DB --
 -------------------------------------
@@ -383,4 +377,5 @@ FROM Schedules
 LEFT JOIN Routes 
     ON Schedules.idRoute = Routes.idRoute
 LEFT JOIN Stations 
+
     ON Schedules.idStation = Stations.idStation;
